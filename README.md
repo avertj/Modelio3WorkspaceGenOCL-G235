@@ -5,11 +5,11 @@ Modelio3WorkspaceGenOCL-G99
 Summary
 ------------
 This repository contains the necessary elements to build an OCL
-generator from UML thanks to the Modelio Open Source tool. 
+generator from UML thanks to the Modelio Open Source tool.
 It will allow you to create a basic modelio 'workspace' with some
 example projects and a place to define the code of your generator
 as a modelio 'macro'. Macros are written in jython, that is
-a python engine running on a JVM. 
+a python engine running on a JVM.
 
 Installation
 ---------------
@@ -22,15 +22,15 @@ Installation
    pane). Github will create a zip of the project
    (with -master.zip at the end because this is the 'master'
    branch. You will remove this after)
-   
-2. Extract the **WorkspaceGenOCL-G99 ... .zip** archive in a 
+
+2. Extract the **WorkspaceGenOCL-G99 ... .zip** archive in a
    place of your preference. This will create a directory with a
    name like WorkspaceGenOCL-G99 xxx .
 
 3. **Rename this directory**: replace 99 by your group number
    and remove what might follow (e.g. -branch). You should
    now have on your disk a repository like WorkspaceGenOCL-G17
-   if you have the group number 17. This directory will be used 
+   if you have the group number 17. This directory will be used
    later as your modelio workspace.
 
 4. Launch modelio. Modelio will start with a default 'workspace'
@@ -66,12 +66,12 @@ Installation
 
 You are now ready to play.
 
-Executing python code from the 'script' console 
+Executing python code from the 'script' console
 -----------------------------------------------
-In this section you will learn how to use the script console of 
+In this section you will learn how to use the script console of
 Modelio. This is a really excellent feature of Modelio as this
 allowed to play interactively with models, explore the metamodels,
-experiment with transformations, etc. 
+experiment with transformations, etc.
 
 1. Open the 'CyberResidence' project.
 
@@ -91,12 +91,12 @@ experiment with transformations, etc.
                 attributes = c.ownedAttribute
                 print '<h2> %s <\h2>' % c.name
                 print 'The class %s has %i attributes: <ul>' % (c.name, len(attributes))
-                for a in attributes
+                for a in attributes:
                    print '<li> %s : %s </li>' % (a.name, a.type.name )
                 print '</ul>'
 
 7. You may get an error message like the following one (displayed in red)
-     '... line 1 ... SyntaxError: mismatched input '  ' expecting EOF'. 
+     '... line 1 ... SyntaxError: mismatched input '  ' expecting EOF'.
     If so this is due to some extra spaces in the copy paste.
     Python is based on the indentation to represent block,
      so if there are some spaces before the first line (for c ...) the interpreter
@@ -127,52 +127,52 @@ experiment with transformations, etc.
 Executing python code as macros
 ------------------------------------
 Writing code in the console provides a very convenient way to test
-some small snippet of programs interactively. This is an excellent 
+some small snippet of programs interactively. This is an excellent
 advantage of the Modelio environment.
 
 If you want however to develop a more complex program and deliver it
 to other users, you have to use Modelio 'macros'. Macros are just
 python program saved in a file. That's all. Macros can be located
-in three difference places (but not elsewhere, this is a current 
+in three difference places (but not elsewhere, this is a current
 limitation of Modelio):
- 
+
 1. Project macros. This location is only useful for macro that are
    specific to a particular projects. Most of the time this is not
    the case. So the project location is seldom used.
-   
+
 2. Workspace macros. These macros can be used in all projects within
-   this location. We are going to use this location as this is the 
+   this location. We are going to use this location as this is the
    most convenient one. In this tutorial the workspace is obviously
    the WorkspaceGenOCL-Gxx with your group number.
-   
-3. System macros. These macros are located in your .modelio directory, 
+
+3. System macros. These macros are located in your .modelio directory,
    but are normally not for users-defined macros.
-   
+
 Macros are organized in 3 'macros catalogs' according to the location
-above. If you are curious you can have a look to the menu 
+above. If you are curious you can have a look to the menu
 'Configuration > Macros Catalog...' but we are actually no going to
 use this graphical interface. To save your time, the workspace provided
 already comes with 3 macros already registered in the corresponding
-catalog. What you need is just an your system file browser and 
+catalog. What you need is just an your system file browser and
 a textual editor (e.g. Notepad++ on windows) to edit the macros.
 
-1. Open the directory WorkspaceGenOCL-Gxx with your file browser. 
+1. Open the directory WorkspaceGenOCL-Gxx with your file browser.
    There is a **macros** directory. Open it. It contains different
    files: .catalog, and some *.py files which are macros written
    in python.
-   
+
 2. The **.catalog** file list the registered macro, and indicates
-   how they should be included in the modelio user interface and 
-   some additional information. If you are curious look at the 
-   content of the  .catalog file. We are not going to change it as 
+   how they should be included in the modelio user interface and
+   some additional information. If you are curious look at the
+   content of the  .catalog file. We are not going to change it as
    the three macros in the directory are already referenced properly
    by this file. In fact, modelio macro interface mentioned above
    is just used to modify this file. One can edit it instead with
    a text editor. Again, you can leave this file as we will not use it.
-   
-3. The **Sandbox.py** is an extended 'Hello World' macros. You can 
+
+3. The **Sandbox.py** is an extended 'Hello World' macros. You can
    execute this macro using "Sandbox" button in the modelio toolbar.
-   (If you don't see this label in the toolbar you should restart 
+   (If you don't see this label in the toolbar you should restart
    modelio and make sure that you are using the WorkspaceGenOCL-Gxx
    workspace). To edit a macro you just have to edit the python file
    with your favourite editor. For instance Notepad++ is a good option
@@ -180,23 +180,23 @@ a textual editor (e.g. Notepad++ on windows) to edit the macros.
    You can modify and do whatever you want with the sandbox.py. This
    is your playground. Just make some modifications, save the file
    and press the Sandbox button to see immediately the result.
-   
+
 4. The **GenOCL.py** is the macro that **will constitute the result of you
    work**. You will put there all the python code that allow to generate
    a USE OCL model from a class model. To be more precise, when
    a package is selected in the modelio browser, executing this macro
    will generate the corresponding USE OCL code. Currently the file contains
    only some hints to structure this transformation.
-   
+
 5. The **CoExplorer.py** is a tool written to simplify your life
-   (at least the part related with modelio). This macro allows 
+   (at least the part related with modelio). This macro allows
    to explore at the same time the model and metamodel.
-   This macro is not indented to be modified, unless you find bugs and 
-   correct them, or want to improve it. This macro is available from the 
+   This macro is not indented to be modified, unless you find bugs and
+   correct them, or want to improve it. This macro is available from the
    [official 'Modelio Stone'](http://www.modeliosoft.com/en/modelio-store)
    It has been included directly in the WorkspaceGenOCL-Gxx
    workspace in order to save you time. If you find some bug or
-   have some observations your can post a comment there. And if you find 
+   have some observations your can post a comment there. And if you find
    it useful you can rate it as well. To try it just select some
    arbitrary model element in modelio browser and press 'CoExplorer'
    in the toolbar.
@@ -208,21 +208,21 @@ just let us have a look at the modelio project delivered with modelio.
 
 1. Open the CyberResidences project in modelio if not already done.
   This project contains the full CyberResidences model apart from the
-  constraints. If you browse this project you should find at the third 
+  constraints. If you browse this project you should find at the third
   level (or forth depending on a display configuration) a package
   'CyberResidences' marked with a 'C' letter. This icon does not come
   from modelio but comes with the 'Constraint Profile' embedded in the
-  model (more later). By selecting this package, the macro 
+  model (more later). By selecting this package, the macro
   'GenerateOCL' should generate the corresponding USE OCL text. This
   is your work. You will have before to enter the different constraints.
 
-2. Close this project and open the UMLTestCases project. Browse the 
+2. Close this project and open the UMLTestCases project. Browse the
   content of this project. You will see that in the package ClassModels
   they are plenty of very small projects with increasing complexity,
   or that contains only a few UML constructs in isolation. For instance
   a model contains only Classes, some other only Classes and Attributes,
   some others only Inheritances, only Association Classes, etc. This
-  project is intended to allow you to test you OCL generator in an 
+  project is intended to allow you to test you OCL generator in an
   incremental way. For instance you can first implement the generation
   of classes, then test the generator with the corresponding package.
   Then implement the generator for attributes and test it with a project
@@ -230,58 +230,58 @@ just let us have a look at the modelio project delivered with modelio.
   list of features in UML and the provided test cases. This is some form
   of Test Driven Development (TDD) at work. Note that note all constructs
   are available in USE OCL: this set of test cases have been developed
-  to test arbitrary transformation based on class diagrams, not 
+  to test arbitrary transformation based on class diagrams, not
   specifically the class diagram to USE OCL transformation.
 
 3. Close this project and open the project Sandbox. This project is
    empty. This is your playground. Use it if you want to play with
-   modelio features or create your own models. Unless mentioned 
-   explicitly you are not expected to modify the other projects.   
-   
+   modelio features or create your own models. Unless mentioned
+   explicitly you are not expected to modify the other projects.
+
 Time to work
 ------------
 It now time to work. You job is to write the content of GenOCL macro
-incrementally. You can follow any kind of process, but here are some 
+incrementally. You can follow any kind of process, but here are some
 possible ideas.
 
-1. **Split the work among members of the group**. You have first to discuss 
-   with your colleague on your groups and decide how to split the work. 
-   For instance you can define who is going to write which functions 
-   (see the content of GenOCL.py for some hints on the hint of the whole 
+1. **Split the work among members of the group**. You have first to discuss
+   with your colleague on your groups and decide how to split the work.
+   For instance you can define who is going to write which functions
+   (see the content of GenOCL.py for some hints on the hint of the whole
    program). You can 'drive' these decisions by observing the structure
    of the UML metamodel. For instance writing generation for attributes
    is independent from writing generation for methods. Playing a bit
    with the actual metamodel of modelio, will show you that one will have
    to write methods to get association classes, etc. These different
-   functions can be elaborated separately. 
-   
+   functions can be elaborated separately.
+
 2. **Select a test case in UMLTestCases** that has been assigned to you.
    Open this project. Use CoExplorer to check how the model is structured
-   according to modelio metamodel. 
-   
+   according to modelio metamodel.
+
 3. **Dealing with the source metamodel**. Here this is UML.
-   Use the console to check which python expressions are required to get 
-   the relevant information from the UML model. If these expressions are 
-   not trivial  you might want to write a general purpose metamodel helpers 
-   (see GenOCL.py). After testing them interactively the best is to put it 
+   Use the console to check which python expressions are required to get
+   the relevant information from the UML model. If these expressions are
+   not trivial  you might want to write a general purpose metamodel helpers
+   (see GenOCL.py). After testing them interactively the best is to put it
    in GenOCL.py so that you can reuse it.
-   
+
 4. **Check how to deal with the target metamodel**. Here this is the USE
    OCL language. The metamodel is indeed the textual syntax available
    in the documentation. This step is necessary to see what is possible
    to translate exactly with USE OCL. You will see for instance that
    an association can have more than two roles...  This step also allow
-   you to check which syntax you have to generate. 
-   
-5. **Mapping the source metamodel to the target metamodel**. 
-   Once the functions for extracting the source metamodel (UML) are ok, 
+   you to check which syntax you have to generate.
+
+5. **Mapping the source metamodel to the target metamodel**.
+   Once the functions for extracting the source metamodel (UML) are ok,
    and you know what to produce w.r.t target metamodel (USE OCL)
    you can write the function(s) that use the helpers defined before
    and produce the corresponding USE OCL text. Again you can start
-   playing in the console and then when everything is fine add new 
+   playing in the console and then when everything is fine add new
    functions to GenOCL.py.
-   
-5. **Synchronization points**. At some point you will have to synchronize 
+
+5. **Synchronization points**. At some point you will have to synchronize
    with other groups members. For instance when some functions depend from
    functions written by someone else. Or simply because it is always good
    to synchronize to avoid divergence. That is, do not wait for the end for
@@ -292,7 +292,3 @@ possible ideas.
    generate as a whole.
 
 That's all folk.
-
-   
-
-   
