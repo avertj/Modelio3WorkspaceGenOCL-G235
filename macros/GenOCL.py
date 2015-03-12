@@ -41,14 +41,16 @@ Additional observations could go there
 #---------------------------------------------------------
 
 # example
+
+
 def isAssociationClass(element):
-    """
-    Return True if and only if the element is an association
-    that have an associated class, or if this is a class that
-    has a associated association. (see the Modelio metamodel
-    for details)
-    """
-    # TODO
+  """
+  Return True if and only if the element is an association
+  that have an associated class, or if this is a class that
+  has a associated association. (see the Modelio metamodel
+  for details)
+  """
+  # TODO
 
 
 #---------------------------------------------------------
@@ -62,12 +64,11 @@ def isAssociationClass(element):
 
 # example
 def associationsInPackage(package):
-    """
-    Return the list of all associations that start or
-    arrive to a class which is recursively contained in
-    a package.
-    """
-
+  """
+  Return the list of all associations that start or
+  arrive to a class which is recursively contained in
+  a package.
+  """
 
 
 #---------------------------------------------------------
@@ -79,8 +80,8 @@ def associationsInPackage(package):
 # transformation generating text as output.
 #---------------------------------------------------------
 
-def indent(something, level = 0):
-    return (level * '    ') + str(something)
+def indent(something, level=0):
+  return (level * '    ') + str(something)
 
 # for instance a function to indent a multi line string if
 # needed, or to wrap long lines after 80 characters, etc.
@@ -97,81 +98,193 @@ def indent(something, level = 0):
 # string and output the result at the end.
 #---------------------------------------------------------
 
-def generateAttributes(elem, indentLevel = 0):
-    if elem.ownedAttribute:
-        print indent('attributes', indentLevel)
-        for attr in elem.ownedAttribute:
-            print indent('%s : %s%s' % (attr.name, umlBasicType2OCL(attr.type.name), (' -- @derived' if attr.isDerived else '')), (indentLevel + 1))
 
-def generateOperations(elem, indentLevel = 0):
-    if elem.ownedOperation:
-        print indent('operations', indentLevel)
-        for op in elem.ownedOperation:
-            print indent('%s()' % (op.name), (indentLevel + 1))
+def attributes2OCL(elem, indentLevel=0):
+  if elem.ownedAttribute:
+    print indent('attributes', indentLevel)
+    for attr in elem.ownedAttribute:
+      print indent('%s : %s%s' % (attr.name, basicType2OCL(attr.type.name), (' -- @derived' if attr.isDerived else '')), (indentLevel + 1))
 
 
-def umlBasicType2OCL(type_):
-    """
-    Generate USE OCL basic type. Note that
-    type conversions are required.
-    """
-    if type_ in ('integer', 'long', 'short'):
-        return 'Integer'
-    if type_ in ('float', 'double'):
-        return 'Real'
-    if type_ in ('string', 'char'):
-        return 'String'
-    if type_ in ('boolean'):
-        return 'Boolean'
+def operations2OCL(elem, indentLevel=0):
+  if elem.ownedOperation:
+    print indent('operations', indentLevel)
+    for op in elem.ownedOperation:
+      ret = ''
+      if op.return:
+        ret = basicType2OCL(op.return.type.name)
+        if op.return.multiplicityMax == '*':
+          ret = 'Set(%s)' % ret
+        ret = ' : %s' % ret
+      # else if int(op.return.multiplicityMax) > 1:
+      #  ret = '%s[%s]' % (ret, op.return.multiplicityMax)
+      params = ''
+      for param in op.IO:
+        params += '%s : %s, ' % (param.name, basicType2OCL(param.type.name))
+      params = params[:-2]
+      print indent('%s(%s)%s' % (op.name, params, ret), (indentLevel + 1))
 
-def umlClass2OCL(class_):
-    """
-    Generate USE OCL code for the enumeration
-    """
-    parents = ''
-    if class_.parent:
-        parents += ' < '
-        for p in class_.parent:
-            parents += '%s, ' % p.superType.name
-        parents = parents[:-2]
 
-    print indent('%sclass %s%s' % (('abstract ' if class_.isAbstract else ''), class_.name, parents))
+def basicType2OCL(type_):
+  """
+  Generate USE OCL basic type. Note that
+  type conversions are required.
+  """
+  if type_ in ('integer', 'long', 'short'):
+    return 'Integer'
+  if type_ in ('float', 'double'):
+    return 'Real'
+  if type_ in ('string', 'char'):
+    return 'String'
+  if type_ in ('boolean'):
+    return 'Boolean'
+  return type_
 
-    generateAttributes(class_)
 
-    generateOperations(class_)
+def association2OCL(association_):
+  kind = 'association'
+  for end in association_.end:
+    if end.aggregation == AggregationKind.KINDISCOMPOSITION:
+      kind = 'composition'
+    if end.aggregation == AggregationKind.KINDISAGGREGATION:
+      kind = 'aggregation'
+  print indent('%s %s between' % (kind, association_.name))
+  for end in association_.end:
+    card = ''
+    if end.multiplicityMax == end.multiplicityMin:
+      card = '[%s]' % end.multiplicityMax
+    elif end.multiplicityMin == '0' and end.multiplicityMax == '*':
+      card = '[*]'
+    else:
+      card = '[%s..%s]' % (end.multiplicityMin, end.multiplicityMax)
+    #print indent('%s%s role %s' % (end.target.name, card, end.name), 1)
+    print indent('%s%s role %s%s' % (end.oppositeOwner.owner.name, card, end.name, (' ordered' if end.isOrdered else '')), 1)
+  print indent('end')
 
-    print indent('end')
 
-def umlEnumeration2OCL(enumeration_):
-    """
-    Generate USE OCL code for the enumeration
-    """
-    print 'enum %s {'
+def associationClass2OCL(associationClass_):
+  print indent('%sassociationclass %s between' % (('abstract ' if associationClass_.isAbstract else ''), associationClass_.name))
+  for end in associationClass_.linkToAssociation.associationPart.end:
+    card = ''
+    if end.multiplicityMax == end.multiplicityMin:
+      card = '[%s]' % end.multiplicityMax
+    elif end.multiplicityMin == '0' and end.multiplicityMax == '*':
+      card = '[*]'
+    else:
+      card = '[%s..%s]' % (end.multiplicityMin, end.multiplicityMax)
+    print indent('%s%s role %s%s' % (end.target.name, card, end.name, (' ordered' if end.isOrdered else '')), 1)
+  attributes2OCL(associationClass_)
+  operations2OCL(associationClass_)
+  print indent('end')
 
-    print '}'
 
-# etc.
+def class2OCL(class_):
+  """
+  Generate USE OCL code for the enumeration
+  """
+  parents = ''
+  if class_.parent:
+    parents += ' < '
+    for p in class_.parent:
+      parents += '%s, ' % p.superType.name
+    parents = parents[:-2]
+  print indent('%sclass %s%s' % (('abstract ' if class_.isAbstract else ''), class_.name, parents))
+  attributes2OCL(class_)
+  operations2OCL(class_)
+  print indent('end')
+
+
+def enumeration2OCL(enumeration_):
+  """
+  Generate USE OCL code for the enumeration
+  """
+  print indent('enum %s {' % enumeration_.name)
+  values = ''
+  for val in enumeration_.value:
+    values += indent('%s,\n' % val.name, 1)
+  print values[:-2]
+  print indent('}')
+
 
 def package2OCL(package_):
-    """
-    Generate a complete OCL specification for a given package.
-    The inner package structure is ignored. That is, all
-    elements useful for USE OCL (enumerations, classes,
-    associationClasses, associations and invariants) are looked
-    recursively in the given package and output in the OCL
-    specification. The possibly nested package structure that
-    might exist is not reflected in the USE OCL specification
-    as USE is not supporting the concept of package.
-    """
-    print indent('model %s' % package_.name)
-    for elem in package_.ownedElement:
-        if isinstance(elem, Package):
-            package2OCL(elem)
-        if isinstance(elem, Enumeration):
-            umlEnumeration2OCL(elem)
-        if isinstance(elem, Class):
-            umlClass2OCL(elem)
+  """
+  Generate a complete OCL specification for a given package.
+  The inner package structure is ignored. That is, all
+  elements useful for USE OCL (enumerations, classes,
+  associationClasses, associations and invariants) are looked
+  recursively in the given package and output in the OCL
+  specification. The possibly nested package structure that
+  might exist is not reflected in the USE OCL specification
+  as USE is not supporting the concept of package.
+  """
+  print indent('model %s' % package_.name)
+
+
+def buildModel(package_):
+  # if package_.uuid not in models:
+    #models[package_.uuid] = OCLModel(package_.name)
+  for elem in package_.ownedElement:
+    if isinstance(elem, Package):
+      buildModel(elem)
+    if isinstance(elem, Enumeration):
+      # models[package_.uuid].addEnumeration(elem)
+      model.addEnumeration(elem)
+    if isinstance(elem, Class):
+      # models[package_.uuid].addClass(elem)
+      model.addClass(elem)
+
+
+class OCLModel(object):
+
+  """docstring for OCLModel"""
+
+  classes = []
+  associationClasses = []
+  enumerations = []
+  associations = {}
+
+  def __init__(self, name):
+    super(OCLModel, self).__init__()
+    self.name = name
+
+  def isEmpty(self):
+    return len(self.classes) == len(self.associationClasses) == len(self.enumerations) == len(self.associations) == 0
+
+  def addClass(self, class_):
+    if class_.linkToAssociation:
+      self.addAssociationClass(class_)
+    else:
+      self.classes.append(class_)
+
+    for ass in class_.targetingEnd:
+      self.addAssociation(ass.association)
+
+  def addAssociationClass(self, assocClass_):
+    self.associationClasses.append(assocClass_)
+
+  def addEnumeration(self, enum_):
+    self.enumerations.append(enum_)
+
+  def addAssociation(self, assoc_):
+    if assoc_.uuid not in self.associations and assoc_.linkToClass == None:
+      self.associations[assoc_.uuid] = assoc_
+
+  def generateOCL(self):
+    if not self.isEmpty():
+      package2OCL(self)
+      for enum in self.enumerations:
+        print ''
+        enumeration2OCL(enum)
+      for cla in self.classes:
+        print ''
+        class2OCL(cla)
+      for ass in self.associations.values():
+        print ''
+        association2OCL(ass)
+      for ass in self.associationClasses:
+        print ''
+        associationClass2OCL(ass)
+
 
 #---------------------------------------------------------
 #           User interface for the Transformation
@@ -187,7 +300,12 @@ def package2OCL(package_):
 # (1) computation of the 'package' parameter
 # (2) call of package2OCL(package)
 # (3) do something with the result
+if len(selectedElements) == 1:
+  elem = selectedElements[0]
+# for elem in selectedElements:
+  if isinstance(elem, Package):
+    model = OCLModel(elem.name)
+    buildModel(elem)
 
-for elem in selectedElements:
-    if isinstance(elem, Package):
-        package2OCL(elem)
+# for model in models.values():
+model.generateOCL()
