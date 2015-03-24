@@ -1,20 +1,24 @@
-<?xml version="1.0" ?><catalog>
-<script name="Sandbox" path="Sandbox.py" icon-path="" show-menu="true" show-toolbar="true">
-<description></description>
-</script>
-<script name="Generate OCL" path="GenOCL.py" icon-path="" show-menu="true" show-toolbar="true">
-<description></description>
-</script>
-<script name="CoExplorer" path="CoExplorer.py" icon-path="" show-menu="true" show-toolbar="true">
-<description></description>
-</script>
-<script name="Online Script >> New" path="OnlinePyScript-New.py" icon-path="" show-menu="true" show-toolbar="true">
-<description></description>
-</script>
-<script name=">> Edit" path="OnlinePyScript-Edit.py" icon-path="" show-menu="true" show-toolbar="true">
-<description></description>
-</script>
-<script name=">> Run" path="OnlinePyScript-Run.py" icon-path="" show-menu="true" show-toolbar="true">
-<description></description>
-</script>
+<?xml version="1.0" ?>
+<catalog>
+	<script name="Sandbox" path="Sandbox.py" icon-path="" show-menu="true" show-toolbar="true">
+		<description> </description>
+	</script>
+	<script name="Generate OCL" path="GenOCL.py" icon-path="" show-menu="true" show-toolbar="true">
+		<description> </description>
+	</script>
+	<script name="CoExplorer" path="CoExplorer.py" icon-path="" show-menu="true" show-toolbar="true">
+		<description> </description>
+	</script>
+	<script name="Online Script >> New" path="OnlinePyScript-New.py" icon-path="" show-menu="true" show-toolbar="true">
+		<description> </description>
+	</script>
+	<script name=">> Edit" path="OnlinePyScript-Edit.py" icon-path="" show-menu="true" show-toolbar="true">
+		<description> </description>
+	</script>
+	<script name=">> Run" path="OnlinePyScript-Run.py" icon-path="" show-menu="true" show-toolbar="true">
+		<description> </description>
+	</script>
+	<script name="Export SCN" path="export_scn.py" icon-path="" show-menu="true" show-toolbar="true">
+		<description> </description>
+	</script>
 </catalog>
